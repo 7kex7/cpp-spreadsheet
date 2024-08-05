@@ -144,22 +144,24 @@ public:
     }
 
     double Evaluate(const SheetInterface& sheet) const override {
+        const double lhs = lhs_->Evaluate(sheet);
+        const double rhs = rhs_->Evaluate(sheet);
         double res;
         switch (type_) {
             case Divide: {
-                res = lhs_->Evaluate(sheet) / rhs_->Evaluate(sheet);
+                res =  lhs / rhs;
                 break;
             }
             case Multiply: {
-                res = lhs_->Evaluate(sheet) * rhs_->Evaluate(sheet);
+                res = lhs * rhs;
                 break;
             }
             case Subtract: {
-                res = lhs_->Evaluate(sheet) - rhs_->Evaluate(sheet);
+                res = lhs - rhs;
                 break;
             }
             case Add: {
-                res = lhs_->Evaluate(sheet) + rhs_->Evaluate(sheet);
+                res = lhs + rhs;
                 break;
             }
             default:
@@ -207,15 +209,7 @@ public:
     }
 
     double Evaluate(const SheetInterface& sheet) const override {
-        switch (type_) {
-            case UnaryPlus:
-                return operand_->Evaluate(sheet);
-            case UnaryMinus:
-                return -1 * operand_->Evaluate(sheet);
-            default:
-                assert(false);
-                return static_cast<ExprPrecedence>(INT_MAX);
-        }
+        return (type_ == UnaryMinus ? -1 : 1) * operand_->Evaluate(sheet);
     }
 
 private:
